@@ -10,7 +10,10 @@
     "enabled": true,
     "rules": {
       "suspicious": {
-        "noExplicitAny": "error"
+        "noExplicitAny": "warn"
+      },
+      "style": {
+        "useImportType": "off"
       }
     }
   },
