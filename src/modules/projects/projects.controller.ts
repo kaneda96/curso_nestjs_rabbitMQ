@@ -9,12 +9,16 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common'
 import { ApiResponse } from '@nestjs/swagger'
-import { ProjectListItemDTO, ProjectRequestDTO } from './project.dto'
+import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id.decorator'
+import { ValidateResourcesIdInterceptor } from 'src/interceptors/validate-resources-id/validate-resources-id.interceptor'
+import { ProjectFullDTO, ProjectListItemDTO, ProjectRequestDTO } from './project.dto'
 import { ProjectsService } from './projects.service'
 
 @Controller({ path: 'projects', version: '1' })
+@UseInterceptors(ValidateResourcesIdInterceptor)
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
@@ -26,19 +30,13 @@ export class ProjectsController {
     return this.projectsService.findAll()
   }
 
-  @Get(':id')
+  @Get(':projectId')
   @ApiResponse({
-    type: ProjectListItemDTO,
+    type: ProjectFullDTO,
   })
-  async findById(@Param('id', ParseUUIDPipe) id: string) {
-    const project = await this.projectsService.findById(id)
-    if (project === null) {
-      throw {
-        statusCode: HttpStatus.NOT_FOUND,
-        message: 'Project not found',
-      }
-    }
-    return project
+  @ValidateResourcesId()
+  async findById(@Param('projectId', ParseUUIDPipe) id: string) {
+    return await this.projectsService.findById(id)
   }
 
   @Post()
@@ -49,24 +47,19 @@ export class ProjectsController {
     return this.projectsService.create(project)
   }
 
-  @Put(':id')
+  @Put(':projectId')
   @ApiResponse({
     type: ProjectListItemDTO,
   })
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() data: ProjectRequestDTO) {
-    const project = await this.projectsService.findById(id)
-    if (project === null) {
-      throw {
-        statusCode: HttpStatus.NOT_FOUND,
-        message: 'Project not found',
-      }
-    }
+  @ValidateResourcesId()
+  async update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: ProjectRequestDTO) {
     return this.projectsService.update(id, data)
   }
 
-  @Delete(':id')
+  @Delete(':projectId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseUUIDPipe) id: string) {
+  @ValidateResourcesId()
+  delete(@Param('projectId', ParseUUIDPipe) id: string) {
     return this.projectsService.delete(id)
   }
 }
