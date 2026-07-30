@@ -14,7 +14,7 @@ import {
 import { ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id.decorator'
 import { ValidateResourcesIdInterceptor } from 'src/interceptors/validate-resources-id/validate-resources-id.interceptor'
-import { ProjectFullDTO, ProjectListItemDTO, ProjectRequestDTO } from './project.dto'
+import { CreateProjectRequestDTO, ProjectFullDTO, ProjectListItemDTO, UpdateProjectDTO } from './project.dto'
 import { ProjectsService } from './projects.service'
 
 @Controller({ path: 'projects', version: '1' })
@@ -43,7 +43,7 @@ export class ProjectsController {
   @ApiResponse({
     type: ProjectListItemDTO,
   })
-  create(@Body() project: ProjectRequestDTO) {
+  create(@Body() project: CreateProjectRequestDTO) {
     return this.projectsService.create(project)
   }
 
@@ -52,7 +52,7 @@ export class ProjectsController {
     type: ProjectListItemDTO,
   })
   @ValidateResourcesId()
-  async update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: ProjectRequestDTO) {
+  async update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: UpdateProjectDTO) {
     return this.projectsService.update(id, data)
   }
 
