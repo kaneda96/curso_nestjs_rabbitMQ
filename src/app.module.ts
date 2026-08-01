@@ -10,6 +10,7 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TasksService } from './modules/tasks/tasks.service'
 import { UsersModule } from './modules/users/users.module'
 import { PrismaService } from './prisma.service'
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PrismaService } from './prisma.service'
     CollaboratorsModule,
     CommentsModule,
     AuthModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, TasksService, RequestContextService],
