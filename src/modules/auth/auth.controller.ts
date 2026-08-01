@@ -25,4 +25,14 @@ export class AuthController {
   protected(@AuthenticatedUser() user: User) {
     return `autenticated ${user.email} `
   }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() { email }: { email: string }) {
+    return await this.authService.forgotPassword(email)
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() { token, newPassword }: { token: string; newPassword: string }) {
+    return await this.authService.resetPassword(token, newPassword)
+  }
 }

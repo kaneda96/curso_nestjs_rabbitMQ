@@ -5,30 +5,30 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.ad
 import { MailService } from './mail.service'
 
 @Module({
-  providers: [MailService],
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: process.env.MAIL_HOST,
-        port: Number(process.env.MAIL_PORT),
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
         secure: false,
         auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASS,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
         },
-        default: {
-          from: `"No Reply" <${process.env.MAIL_FROM}>`,
-        },
-        template: {
-          dir: path.join(__dirname, 'templates'),
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
+      },
+      defaults: {
+        from: `"No Reply" <${process.env.MAIL_FROM}>`,
+      },
+      template: {
+        dir: path.join(__dirname, 'templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
         },
       },
     }),
   ],
   exports: [MailService],
+  providers: [MailService],
 })
 export class MailModule {}
