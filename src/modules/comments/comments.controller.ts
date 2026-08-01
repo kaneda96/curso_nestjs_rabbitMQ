@@ -9,23 +9,21 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiCreatedResponse, ApiOkResponse, ApiResponse } from '@nestjs/swagger'
-import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id.decorator'
+import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id/validate-resources-id.decorator'
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdInterceptor } from 'src/interceptors/validate-resources-id/validate-resources-id.interceptor'
-import {
-  CommentFullDTO,
-  CommentListItemDTO,
-  CreateCommentDTO,
-  UpdateCommentDTO,
-} from './comments.dto'
+import { CommentFullDTO, CommentListItemDTO, CommentRequestDTO } from './comments.dto'
 import { CommentsService } from './comments.service'
 
 @Controller({
   path: 'projects/:projectId/tasks/:taskId/comments',
   version: '1',
 })
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ValidateResourcesIdInterceptor)
 export class CommentsController {
   constructor(private readonly service: CommentsService) {}
@@ -50,7 +48,7 @@ export class CommentsController {
   @Post()
   @ValidateResourcesId()
   @ApiCreatedResponse({ type: CommentListItemDTO, description: 'Create new comment' })
-  create(@Param('taskId', ParseUUIDPipe) taskId: string, @Body() data: CreateCommentDTO) {
+  create(@Param('taskId', ParseUUIDPipe) taskId: string, @Body() data: CommentRequestDTO) {
     this.service.create(taskId, data)
   }
 
@@ -60,7 +58,7 @@ export class CommentsController {
   update(
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Param('commentId', ParseUUIDPipe) commentId: string,
-    @Body() data: UpdateCommentDTO,
+    @Body() data: CommentRequestDTO,
   ) {
     return this.service.update(taskId, commentId, data)
   }

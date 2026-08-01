@@ -43,6 +43,7 @@ export class UsersService {
         createdAt: true,
         updatedAt: true,
         role: true,
+        password: true,
       },
     })
   }

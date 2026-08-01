@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { PrismaService } from 'src/prisma.service'
-import { CreateCommentDTO, UpdateCommentDTO } from './comments.dto'
+import { CommentRequestDTO } from './comments.dto'
 
 const authorAttributes = {
   author: {
@@ -25,7 +26,10 @@ const taskAttribute = {
 
 @Injectable()
 export class CommentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly requestContext: RequestContextService,
+  ) {}
 
   async findAllByTask(taskId: string) {
     const teste = await this.prisma.comment.findMany({
@@ -47,11 +51,12 @@ export class CommentsService {
     })
   }
 
-  async create(taskId: string, data: CreateCommentDTO) {
+  async create(taskId: string, data: CommentRequestDTO) {
     return await this.prisma.comment
       .create({
         data: {
           ...data,
+          authorId: this.requestContext.getUserId(),
           taskId,
         },
         include: authorAttributes,
@@ -61,7 +66,7 @@ export class CommentsService {
       })
   }
 
-  async update(taskId: string, commentId: string, data: UpdateCommentDTO) {
+  async update(taskId: string, commentId: string, data: CommentRequestDTO) {
     const existingComment = await this.findById(taskId, commentId)
 
     if (!existingComment) {
@@ -78,7 +83,13 @@ export class CommentsService {
   }
 
   async remove(taskId: string, commentId: string) {
-    const existingComment = await this.findById(taskId, commentId)
+    const existingComment = await this.prisma.comment.findFirst({
+      where: {
+        id: commentId,
+        taskId,
+        authorId: this.requestContext.getUserId(),
+      },
+    })
 
     if (!existingComment) {
       throw new NotFoundException('Comment not found')
@@ -87,6 +98,8 @@ export class CommentsService {
     return this.prisma.comment.delete({
       where: {
         id: existingComment.id,
+        taskId,
+        authorId: this.requestContext.getUserId(),
       },
       include: authorAttributes,
     })

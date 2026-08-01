@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
 
-export class UpdateCommentDTO {
+export class CommentRequestDTO {
   @ApiProperty({ description: 'Comment content' })
   @IsString()
   @IsNotEmpty()
@@ -35,12 +35,4 @@ class CommentTaskDTO {
 
 export class CommentFullDTO extends CommentListItemDTO {
   @ApiProperty({ type: CommentTaskDTO }) task: CommentTaskDTO
-}
-
-export class CreateCommentDTO extends UpdateCommentDTO {
-  @ApiProperty()
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  authorId: string
 }

@@ -1,20 +1,29 @@
 import { Injectable } from '@nestjs/common'
-import { ColaborattorRole, Role } from '@prisma/client'
+import { ColaborattorRole } from '@prisma/client'
+import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { PrismaService } from 'src/prisma.service'
 import { CreateProjectRequestDTO, UpdateProjectDTO } from './project.dto'
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly requestContexService: RequestContextService,
+  ) {}
 
   findAll() {
-    return this.prismaService.project.findMany()
+    return this.prismaService.project.findMany({
+      where: {
+        createdById: this.requestContexService.getUserId(),
+      },
+    })
   }
 
   findById(id: string) {
     return this.prismaService.project.findUnique({
       where: {
         id: id,
+        createdById: this.requestContexService.getUserId(),
       },
       select: {
         id: true,
@@ -38,11 +47,18 @@ export class ProjectsService {
   }
 
   async create(data: CreateProjectRequestDTO) {
+    const userId = this.requestContexService.getUserId()
+
     const project = await this.prismaService.project.create({
-      data,
+      data: { ...data, createdById: userId },
     })
+
     await this.prismaService.projectCollaborator.create({
-      data: { projectId: project.id, userId: data.createdById, role: ColaborattorRole.OWNER },
+      data: {
+        projectId: project.id,
+        userId: userId,
+        role: ColaborattorRole.OWNER,
+      },
     })
   }
 
