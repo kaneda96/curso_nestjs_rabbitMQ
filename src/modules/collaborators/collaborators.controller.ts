@@ -12,7 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiCreatedResponse, ApiOkResponse, ApiResponse } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id/validate-resources-id.decorator'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdInterceptor } from 'src/interceptors/validate-resources-id/validate-resources-id.interceptor'
@@ -30,6 +30,7 @@ import { CollaboratorsService } from './collaborators.service'
 
 @UseInterceptors(ValidateResourcesIdInterceptor)
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('jwt')
 export class CollaboratorsController {
   constructor(private collaboratorsService: CollaboratorsService) {}
 

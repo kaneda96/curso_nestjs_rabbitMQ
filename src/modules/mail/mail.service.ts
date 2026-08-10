@@ -1,17 +1,18 @@
-import { Injectable } from '@nestjs/common'
-import { MailerService } from '@nestjs-modules/mailer'
+import { Inject, Injectable, Logger } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { EMAIL_SERVICE, SEND_PASSWORD_RESET_EMAIL_EVENT } from 'src/consts'
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
+  private readonly logger = new Logger(MailService.name)
+
+  constructor(@Inject(EMAIL_SERVICE) private readonly client: ClientProxy) {}
 
   async sendPasswordResetEmail(to: string, token: string) {
-    await this.mailerService.sendMail({
-      to,
-      subject: 'Redefinição de senha',
-      template: 'forgot-password', // Name of the template file (forgot-password.hbs)
-      context: {
-        url: `http://localhost:3000/reset-password?token=${token}`, // Pass the reset URL to the template
+    const url = `http://localhost:3000/reset-password?token=${token}`
+    this.client.emit(SEND_PASSWORD_RESET_EMAIL_EVENT, { email: to, url }).subscribe({
+      error: (error) => {
+        this.logger.error(`Falha ao publicar na fila para ${to}`, error)
       },
     })
   }

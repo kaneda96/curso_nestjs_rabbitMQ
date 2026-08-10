@@ -11,6 +11,7 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TasksService } from './modules/tasks/tasks.service'
 import { UsersModule } from './modules/users/users.module'
 import { PrismaService } from './prisma.service'
+import { CloudnaryService } from './common/services/cloudnary/cloudnary.service';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { PrismaService } from './prisma.service'
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, TasksService, RequestContextService],
+  providers: [AppService, PrismaService, TasksService, RequestContextService, CloudnaryService],
 })
 export class AppModule {}

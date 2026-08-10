@@ -1,5 +1,7 @@
+import 'dotenv/config'
 import { ValidationPipe, VersioningType } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 
@@ -16,14 +18,39 @@ async function bootstrap() {
     .setTitle('NestJS RabbitMQ')
     .setDescription('The NestJS RabbitMQ API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'jwt',
+    )
     .addTag('nestjs', 'rabbitmq')
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, swagger)
   SwaggerModule.setup('api', app, documentFactory())
 
+  //Habilitar Microserviços
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RABBITMQ_URL as string],
+      queue: process.env.RABBITMQ_QUEUE as string,
+      queueOptions: {
+        durable: true,
+      },
+    },
+  })
+
   //validators
   app.useGlobalPipes(new ValidationPipe())
+
+  //inicia os microserviços (conecta ao RabbitMQ e escuta a fila)
+  await app.startAllMicroservices()
 
   await app.listen(process.env.PORT ?? 3000)
 }

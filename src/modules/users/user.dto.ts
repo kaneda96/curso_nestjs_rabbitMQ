@@ -30,6 +30,11 @@ export class UpdateUserDTO {
   @IsOptional()
   name?: string
 
+  @ApiProperty({ description: 'avatar' })
+  @IsString()
+  @IsOptional()
+  avatar?: string
+
   @ApiProperty({ description: 'User role', enum: Role, default: Role.ADMIN })
   @IsEnum(Role)
   @IsOptional()
