@@ -17,6 +17,7 @@ import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id/validate-resources-id.decorator'
 import { QueryPaginationDTO } from 'src/common/dtos/query-pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
+import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { ValidateResourcesIdInterceptor } from 'src/interceptors/validate-resources-id/validate-resources-id.interceptor'
 import {
   CreateProjectRequestDTO,
@@ -34,9 +35,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Get()
-  @ApiResponse({
-    type: [ProjectListItemDTO],
-  })
+  @ApiPaginatedResponse(ProjectListItemDTO)
   findAll(@Query() query?: QueryPaginationDTO) {
     return this.projectsService.findAll(query)
   }
