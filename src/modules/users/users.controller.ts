@@ -18,6 +18,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagge
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { CloudnaryService } from 'src/common/services/cloudnary/cloudnary.service'
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
+import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { CreateUserDTO, UpdateUserDTO, UserFullDTO, UserListItemDTO } from './user.dto'
 import { UsersService } from './users.service'
 
@@ -35,7 +36,7 @@ export class UsersController {
   ) {}
 
   @Get()
-  @ApiResponse({ type: [UserListItemDTO] })
+  @ApiPaginatedResponse(UserListItemDTO)
   findAll() {
     return this.usersService.FindAll()
   }
@@ -89,7 +90,7 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
     const user = this.requestContextService.getUser()
-    const userId = user.id;
+    const userId = user.id
     const response = await this.cloudnaryService.uploadImage(file, userId)
     const updatedUser = await this.usersService.update(userId, { ...user, avatar: response.url })
     return updatedUser

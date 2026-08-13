@@ -33,7 +33,7 @@ export class CollabotarorUserDTO {
   @ApiProperty() id: string
   @ApiProperty() name: string
   @ApiProperty() email: string
-  @ApiProperty() avatar: string
+  @ApiProperty() avatar: string | null
 }
 
 export class CollaboratorListItemDTO {
@@ -41,6 +41,6 @@ export class CollaboratorListItemDTO {
   @ApiProperty() projectId: string
   @ApiProperty() userId: string
   @ApiProperty() role: ColaborattorRole
-  @ApiProperty({ format: 'date-time' }) createdAt: string
+  @ApiProperty({ format: 'date-time' }) createdAt: Date
   @ApiProperty() user: CollabotarorUserDTO
 }
