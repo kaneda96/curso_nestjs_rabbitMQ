@@ -19,12 +19,7 @@ import { QueryPaginationDTO } from 'src/common/dtos/query-pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { ValidateResourcesIdInterceptor } from 'src/interceptors/validate-resources-id/validate-resources-id.interceptor'
-import {
-  CreateProjectRequestDTO,
-  ProjectFullDTO,
-  ProjectListItemDTO,
-  UpdateProjectDTO,
-} from './project.dto'
+import { ProjectFullDTO, ProjectListItemDTO, RequestProjectDTO } from './project.dto'
 import { ProjectsService } from './projects.service'
 
 @Controller({ path: 'projects', version: '1' })
@@ -36,7 +31,7 @@ export class ProjectsController {
 
   @Get()
   @ApiPaginatedResponse(ProjectListItemDTO)
-  findAll(@Query() query?: QueryPaginationDTO) {
+  async findAll(@Query() query?: QueryPaginationDTO) {
     return this.projectsService.findAll(query)
   }
 
@@ -53,7 +48,7 @@ export class ProjectsController {
   @ApiResponse({
     type: ProjectListItemDTO,
   })
-  create(@Body() project: CreateProjectRequestDTO) {
+  create(@Body() project: RequestProjectDTO) {
     return this.projectsService.create(project)
   }
 
@@ -62,7 +57,7 @@ export class ProjectsController {
     type: ProjectListItemDTO,
   })
   @ValidateResourcesId()
-  async update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: UpdateProjectDTO) {
+  async update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: RequestProjectDTO) {
     return this.projectsService.update(id, data)
   }
 

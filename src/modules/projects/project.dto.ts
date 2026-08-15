@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { TaskPriority, TaskStatus } from '@prisma/client'
 import { IsNotEmpty, IsString, isString } from 'class-validator'
 
-export class CreateProjectRequestDTO {
+export class RequestProjectDTO {
   //id: string
   @ApiProperty({ example: 'Project Name' })
   @IsString()
@@ -14,23 +14,6 @@ export class CreateProjectRequestDTO {
   description: string
   //createdAt: Date
   //updatedAt: Date
-
-  @ApiProperty({ example: 'Owner User', required: true })
-  @IsString()
-  @IsNotEmpty()
-  //owner
-  createdById: string
-}
-
-export class UpdateProjectDTO {
-  @ApiProperty({ example: 'Project Name' })
-  @IsString()
-  @IsNotEmpty()
-  name: string
-
-  @ApiProperty({ example: 'Project Description', required: false })
-  @IsString()
-  description: string
 }
 
 export class ProjectListItemDTO {

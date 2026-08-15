@@ -4,7 +4,7 @@ import { QueryPaginationDTO } from 'src/common/dtos/query-pagination.dto'
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { PrismaService } from 'src/prisma.service'
 import { paginate, paginateOutput } from 'src/utils/pagination.utils'
-import { CreateProjectRequestDTO, UpdateProjectDTO } from './project.dto'
+import { RequestProjectDTO } from './project.dto'
 
 @Injectable()
 export class ProjectsService {
@@ -33,7 +33,7 @@ export class ProjectsService {
   }
 
   findById(id: string) {
-    return this.prismaService.project.findUnique({
+    return this.prismaService.project.findFirst({
       where: {
         id: id,
         createdById: this.requestContexService.getUserId(),
@@ -59,7 +59,7 @@ export class ProjectsService {
     })
   }
 
-  async create(data: CreateProjectRequestDTO) {
+  async create(data: RequestProjectDTO) {
     const userId = this.requestContexService.getUserId()
 
     const project = await this.prismaService.project.create({
@@ -73,19 +73,18 @@ export class ProjectsService {
         role: ColaborattorRole.OWNER,
       },
     })
+
+    return project
   }
 
-  update(id: string, data: UpdateProjectDTO) {
-    try {
-      return this.prismaService.project.update({
-        where: {
-          id,
-        },
-        data,
-      })
-    } catch (error) {
-      console.error('Error updating project:', error)
-    }
+  update(id: string, data: RequestProjectDTO) {
+    const userId = this.requestContexService.getUserId()
+    return this.prismaService.project.update({
+      where: {
+        id,
+      },
+      data: { ...data, createdById: userId },
+    })
   }
 
   async delete(id: string) {
