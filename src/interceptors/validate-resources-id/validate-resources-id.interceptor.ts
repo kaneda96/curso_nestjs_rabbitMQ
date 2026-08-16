@@ -44,6 +44,7 @@ export class ValidateResourcesIdInterceptor implements NestInterceptor {
     if (taskId) {
       const task = await this.prisma.task.findFirst({
         where: {
+          projectId: projectId,
           id: taskId,
         },
       })
