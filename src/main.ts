@@ -46,6 +46,13 @@ async function bootstrap() {
     },
   })
 
+  //CORS
+  app.enableCors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'UPDATE', 'DELETE', 'OPTIONS'],
+  })
+
   //validators
   app.useGlobalPipes(new ValidationPipe())
 

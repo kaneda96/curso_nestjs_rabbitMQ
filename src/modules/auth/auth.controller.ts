@@ -1,10 +1,27 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
+import { ApiBearerAuth } from '@nestjs/swagger'
+import type { User } from '@prisma/client'
+import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator'
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
+import { UsersService } from '../users/users.service'
 import { SignInDTO, SignUpDTO } from './auth.dto'
 import { AuthService } from './auth.service'
 
-@Controller('auth')
+@Controller({ version: '1', path: 'auth' })
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('signUp')
   @HttpCode(HttpStatus.OK)
@@ -28,5 +45,23 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() { token, newPassword }: { token: string; newPassword: string }) {
     return await this.authService.resetPassword(token, newPassword)
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('jwt')
+  async me(@AuthenticatedUser() user: User) {
+    const userData = await this.usersService.findById(user.id)
+    if (!userData) {
+      throw new NotFoundException()
+    }
+    return {
+      id: userData.id,
+      name: userData.name,
+      avatar: userData.avatar,
+      email: userData.email,
+      createdAt: userData.createdAt,
+      updatedAt: userData.updatedAt,
+    }
   }
 }

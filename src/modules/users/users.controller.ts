@@ -16,7 +16,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
-import { CloudnaryService } from 'src/common/services/cloudnary/cloudnary.service'
+import { CloudinaryService } from 'src/common/services/cloudnary/cloudnary.service'
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { CreateUserDTO, UpdateUserDTO, UserFullDTO, UserListItemDTO } from './user.dto'
@@ -31,7 +31,7 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly cloudnaryService: CloudnaryService,
+    private readonly cloudinaryService: CloudinaryService,
     private readonly requestContextService: RequestContextService,
   ) {}
 
@@ -91,7 +91,7 @@ export class UsersController {
   async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
     const user = this.requestContextService.getUser()
     const userId = user.id
-    const response = await this.cloudnaryService.uploadImage(file, userId)
+    const response = await this.cloudinaryService.uploadImage(file, userId)
     const updatedUser = await this.usersService.update(userId, { ...user, avatar: response.url })
     return updatedUser
   }

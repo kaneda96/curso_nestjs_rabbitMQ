@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { CloudinaryService } from './common/services/cloudnary/cloudnary.service'
 import { RequestContextService } from './common/services/request-context/request-context.service'
 import { AuthModule } from './modules/auth/auth.module'
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module'
@@ -11,7 +12,6 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TasksService } from './modules/tasks/tasks.service'
 import { UsersModule } from './modules/users/users.module'
 import { PrismaService } from './prisma.service'
-import { CloudnaryService } from './common/services/cloudnary/cloudnary.service';
 
 @Module({
   imports: [
@@ -24,6 +24,6 @@ import { CloudnaryService } from './common/services/cloudnary/cloudnary.service'
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, TasksService, RequestContextService, CloudnaryService],
+  providers: [AppService, PrismaService, TasksService, RequestContextService, CloudinaryService],
 })
 export class AppModule {}

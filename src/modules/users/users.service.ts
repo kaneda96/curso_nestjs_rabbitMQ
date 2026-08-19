@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { User } from '@prisma/client'
 import { QueryPaginationDTO } from 'src/common/dtos/query-pagination.dto'
 import { PrismaService } from 'src/prisma.service'
 import { paginate, paginateOutput } from 'src/utils/pagination.utils'
-import { CreateUserDTO, UpdateUserDTO, UserFullDTO, UserListItemDTO } from './user.dto'
+import { CreateUserDTO, UpdateUserDTO, UserListItemDTO } from './user.dto'
 
 @Injectable()
 export class UsersService {
