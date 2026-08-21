@@ -1,6 +1,6 @@
 {
   "name": "curso_nestjs",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
@@ -28,7 +28,8 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.4.6",
-    "@prisma/client": "6.19.3",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "7.9.1",
     "amqp-connection-manager": "^5.0.0",
     "amqplib": "^2.0.1",
     "bcrypt": "^6.0.0",
@@ -56,7 +57,7 @@
     "dotenv": "^17.4.2",
     "globals": "^17.0.0",
     "jest": "^30.4.2",
-    "prisma": "^6.19.3",
+    "prisma": "^7.9.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.4.12",
@@ -73,8 +74,17 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+   "transform": {
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": {
+            "module": "commonjs",
+            "moduleResolution": "node10",
+            "resolvePackageJsonExports": false
+          }
+        }
+      ]
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
@@ -82,7 +92,9 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
+      "^src/(.*)$": "<rootDir>/$1",
+      "^@prisma-generated/(.*)$": "<rootDir>/../prisma/generated/prisma/$1",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
     }
   }
 }

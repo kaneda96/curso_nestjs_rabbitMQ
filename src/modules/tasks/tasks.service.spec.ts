@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { TaskPriority, TaskStatus } from '@prisma/client'
+import { TaskPriority, TaskStatus } from '@prisma-generated/client'
 import { PrismaService } from 'src/prisma.service'
 import { paginateOutput } from 'src/utils/pagination.utils'
 import { TasksService } from './tasks.service'

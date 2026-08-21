@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Project } from '@prisma/client'
+import { Project } from '@prisma-generated/client'
 import { QueryPaginationDTO } from 'src/common/dtos/query-pagination.dto'
 
 export const mockedProjects = faker.helpers.multiple<Project>(

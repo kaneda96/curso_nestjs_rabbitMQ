@@ -23,5 +23,8 @@
     "noFallthroughCasesInSwitch": false,
     "strictPropertyInitialization": false,
     "types": ["node", "jest"],
+    "paths": {
+      "@prisma-generated/*": ["./prisma/generated/prisma/*"]
+    }
   }
 }

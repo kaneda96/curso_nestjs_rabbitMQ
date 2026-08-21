@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
-import { ColaborattorRole } from '@prisma/client'
+import { ColaborattorRole } from '@prisma-generated/client'
 import { PrismaService } from 'src/prisma.service'
 import { paginateOutput } from 'src/utils/pagination.utils'
 import { CollaboratorsService } from './collaborators.service'

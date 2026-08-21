@@ -1,5 +1,5 @@
 import { Injectable, Scope } from '@nestjs/common'
-import { User } from '@prisma/client'
+import { User } from '@prisma-generated/client'
 
 @Injectable({ scope: Scope.REQUEST })
 export class RequestContextService {

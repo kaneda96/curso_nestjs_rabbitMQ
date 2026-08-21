@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ColaborattorRole } from '@prisma/client'
+import { ColaborattorRole } from '@prisma-generated/client'
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class AddCollaboratorDTO {
