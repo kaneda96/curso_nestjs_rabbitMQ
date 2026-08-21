@@ -125,7 +125,7 @@ describe('CollaboratorsService', () => {
     it('should throw BadRequestException when trying to remove the project owner', async () => {
       prisma.projectCollaborator.findUnique.mockResolvedValue({
         ...mockCollaborator,
-        role: 'OWNER',
+        role: ColaborattorRole.OWNER,
       })
 
       await expect(service.delete('project-1', 'user-2')).rejects.toThrow(BadRequestException)
