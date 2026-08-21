@@ -17,7 +17,10 @@ export class ProjectsService {
     const projects = await this.prismaService.project.findMany({
       ...paginate(query),
       where: {
-        createdById: this.requestContexService.getUserId(),
+        OR: [
+          { createdById: this.requestContexService.getUserId() },
+          { projectCollaborator: { some: { userId: this.requestContexService.getUserId() } } },
+        ],
       },
     })
 
@@ -42,6 +45,7 @@ export class ProjectsService {
         id: true,
         name: true,
         description: true,
+        createdById: true,
         createdAt: true,
         updatedAt: true,
         task: {
@@ -89,6 +93,11 @@ export class ProjectsService {
 
   async delete(id: string) {
     await this.prismaService.task.deleteMany({
+      where: {
+        projectId: id,
+      },
+    })
+    await this.prismaService.projectCollaborator.deleteMany({
       where: {
         projectId: id,
       },

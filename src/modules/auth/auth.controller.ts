@@ -6,6 +6,7 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
@@ -13,7 +14,7 @@ import type { User } from '@prisma/client'
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { UsersService } from '../users/users.service'
-import { SignInDTO, SignUpDTO } from './auth.dto'
+import { ChangePasswordDTO, SignInDTO, SignUpDTO } from './auth.dto'
 import { AuthService } from './auth.service'
 
 @Controller({ version: '1', path: 'auth' })
@@ -45,6 +46,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() { token, newPassword }: { token: string; newPassword: string }) {
     return await this.authService.resetPassword(token, newPassword)
+  }
+
+  @Put('change-password')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('jwt')
+  async changePassword(@AuthenticatedUser() user: User, @Body() data: ChangePasswordDTO) {
+    return await this.authService.changePassword(user.id, data)
   }
 
   @Get('me')

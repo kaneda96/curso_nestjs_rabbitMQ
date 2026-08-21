@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { PrismaService } from 'src/prisma.service'
 import { MailService } from '../mail/mail.service'
 import { UsersService } from '../users/users.service'
-import { SignInDTO, SignUpDTO } from './auth.dto'
+import { ChangePasswordDTO, SignInDTO, SignUpDTO } from './auth.dto'
 
 @Injectable()
 export class AuthService {
@@ -50,6 +50,29 @@ export class AuthService {
     await this.mailService.sendPasswordResetEmail(user.email, token)
 
     return { message: 'Password reset email sent' }
+  }
+
+  async changePassword(userId: string, data: ChangePasswordDTO) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    })
+
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    const valid = await bcrypt.compare(data.currentPassword, user.password)
+
+    if (!valid) {
+      throw new UnauthorizedException('Current password is not valid')
+    }
+
+    const hash = await bcrypt.hash(data.newPassword, 12)
+
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { password: hash },
+    })
   }
 
   async resetPassword(token: string, newPassword: string) {

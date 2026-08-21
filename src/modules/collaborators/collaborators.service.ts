@@ -72,7 +72,7 @@ export class CollaboratorsService {
       throw new BadRequestException('The project owner can´t be removed')
     }
 
-    this.prisma.projectCollaborator.delete({
+    await this.prisma.projectCollaborator.delete({
       where: {
         userId_projectId: {
           projectId,
