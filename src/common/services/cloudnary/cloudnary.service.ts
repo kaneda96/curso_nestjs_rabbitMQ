@@ -1,7 +1,7 @@
+import Multer from 'Multer'
 import { Readable } from 'node:stream'
 import { Injectable } from '@nestjs/common'
 import { v2 as cloudinary } from 'cloudinary'
-import 'multer'
 
 @Injectable()
 export class CloudinaryService {
