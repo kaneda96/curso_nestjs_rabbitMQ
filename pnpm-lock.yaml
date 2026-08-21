@@ -35,6 +35,9 @@ importers:
       '@prisma/client':
         specifier: 6.19.3
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
+      '@types/multer':
+        specifier: ^2.2.0
+        version: 2.2.0
       amqp-connection-manager:
         specifier: ^5.0.0
         version: 5.0.0(amqplib@2.0.1)
@@ -93,9 +96,6 @@ importers:
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
-      '@types/multer':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3

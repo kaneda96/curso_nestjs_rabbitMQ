@@ -17,7 +17,6 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
-  ApiResponse,
 } from '@nestjs/swagger'
 import { ValidateResourcesId } from 'src/common/decorators/validate-resources-id/validate-resources-id.decorator'
 import { QueryPaginationDTO } from 'src/common/dtos/query-pagination.dto'
