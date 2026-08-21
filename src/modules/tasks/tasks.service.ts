@@ -45,7 +45,7 @@ export class TasksService {
   }
 
   async findById(taskId: string, projectId: string) {
-    const task = this.prismaService.task.findFirst({
+    return this.prismaService.task.findFirst({
       where: {
         id: taskId,
         projectId,

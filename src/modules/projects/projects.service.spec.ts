@@ -27,6 +27,7 @@ describe('ProjectsService', () => {
             },
             projectCollaborator: {
               create: jest.fn(),
+              deleteMany: jest.fn(),
             },
             task: {
               deleteMany: jest.fn(),
